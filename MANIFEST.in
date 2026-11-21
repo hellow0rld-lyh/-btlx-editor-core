@@ -1,0 +1,8 @@
+include .gitignore
+include README.md
+include NOTICE.md
+include CONTRIBUTING.md
+include COPYING
+include COPYING.LESSER
+include smoke_test.py
+recursive-include examples *.py
