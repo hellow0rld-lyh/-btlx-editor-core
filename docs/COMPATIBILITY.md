@@ -1,17 +1,19 @@
 # Compatibility and verification
 
 The package declares `requires-python = ">=3.11"`, but **a declaration is
-not a test result**. The project tests its synthetic, dependency-free API
-on GitHub Actions using the matrix in
+not a test result**. The initial GitHub Actions run completed successfully
+on all five configured jobs: [CI run #44885784941](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/runs/44885784941),
+2026-11-21, source commit `f6046a57fc8218355e79db20ca6dab7ed0476d98`.
+The synthetic, dependency-free matrix is defined in
 [`python-ci.yml`](../.github/workflows/python-ci.yml):
 
-| Platform | Python | Validation source |
+| Platform | Python | CI run #44885784941 |
 |---|---|---|
-| Ubuntu | 3.11 | CI matrix |
-| Ubuntu | 3.12 | CI matrix |
-| Ubuntu | 3.13 | CI matrix |
-| Ubuntu | 3.14 | CI matrix |
-| Windows | 3.14 | CI matrix |
+| Ubuntu | 3.11 | **PASS** |
+| Ubuntu | 3.12 | **PASS** |
+| Ubuntu | 3.13 | **PASS** |
+| Ubuntu | 3.14 | **PASS** |
+| Windows | 3.14 | **PASS** |
 
 The initial release was built and installed locally on Python **3.14.6**.
 Other interpreter/platform combinations should only be marked **passed**

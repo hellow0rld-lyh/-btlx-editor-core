@@ -8,7 +8,7 @@
 
 **中文简介：** BTLX Editor Core 是一个使用 Python 编写的轻量级无损 Protobuf 二进制解析与结构编辑库，支持未知字段保留、原始字节保真、外部描述符和事务式修改。它**不包含原版游戏文件、逆向获得的描述符或完整 GUI**。
 
-> **Alpha 0.1.0a1.** The release was locally tested on Python 3.14; Python 3.11–3.14 CI is now configured, and [actual job results](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml) are the authority for other versions. No game or device compatibility is claimed.
+> **Alpha 0.1.0a1.** Python 3.11, 3.12, 3.13 and 3.14 passed the initial Ubuntu CI matrix, and Python 3.14 passed on Windows ([verified run](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/runs/44885784941), 2026-11-21). No game or device compatibility is claimed.
 
 ## What it does
 
