@@ -1,8 +1,14 @@
 # BTLX Editor Core
 
-**Experimental lossless protobuf wire and descriptor-driven editing library** written in Python. The project exposes a small reusable core rather than a complete game editor.
+[![Python CI](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml/badge.svg)](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
+![License: LGPL-3.0-or-later](https://img.shields.io/badge/license-LGPL--3.0--or--later-green)
 
-> **Alpha 0.1.0a1.** Tested locally on Python 3.14. Python 3.11–3.13 are currently untested even though the declared version range allows them. No device or game runtime compatibility is claimed.
+**A lightweight, lossless Protocol Buffers wire parser and descriptor-driven binary editing core in Python.** The public package is a reusable library, not a complete game editor. It has no third-party runtime dependencies.
+
+**中文简介：** BTLX Editor Core 是一个使用 Python 编写的轻量级无损 Protobuf 二进制解析与结构编辑库，支持未知字段保留、原始字节保真、外部描述符和事务式修改。它**不包含原版游戏文件、逆向获得的描述符或完整 GUI**。
+
+> **Alpha 0.1.0a1.** The release was locally tested on Python 3.14; Python 3.11–3.14 CI is now configured, and [actual job results](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml) are the authority for other versions. No game or device compatibility is claimed.
 
 ## What it does
 
@@ -14,14 +20,23 @@
 
 ## Install and try it
 
-In a Python environment with setuptools available:
+Requires Python 3.11+ and a build environment with setuptools. PyPI distribution is **not yet available**; install from a cloned source checkout:
+
+```bash
+git clone https://github.com/hellow0rld-lyh/-btlx-editor-core.git
+cd -- -btlx-editor-core
+```
+
+Then:
 
 \`\`\`bash
+python -m pip install "setuptools>=77" wheel
 python -m pip install --no-build-isolation .
 python examples/synthetic_roundtrip.py
+python -m unittest discover -s tests -v
 \`\`\`
 
-To smoke-test the installed Wheel in an isolated target rather than using an environment-wide install:
+To smoke-test a second installation in an isolated target rather than relying only on the environment-wide install:
 
 \`\`\`bash
 python -m pip install --no-build-isolation --no-deps --target .test-install .
@@ -38,6 +53,15 @@ from btlx_core import (
 \`\`\`
 
 \`examples/synthetic_roundtrip.py\` demonstrates a caller-authored descriptor and a byte-preserving edit. The historical edit-plan schema identifier is \`EasyTechBTLXEditPlan/v1\`; it does **not** import or depend on the EasyTech research repository.
+
+## Documentation and verification
+
+- [Compatibility and Python test matrix](docs/COMPATIBILITY.md)
+- [Source provenance and redistribution scope](docs/SOURCE_PROVENANCE.md)
+- [Contribution guidelines](CONTRIBUTING.md)
+- [CI status](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml)
+
+CI runs synthetic contract regressions and isolated package tests for Python 3.11–3.14 on Ubuntu and 3.14 on Windows. These results do not establish compatibility with any particular proprietary game build.
 
 ## Limitations
 

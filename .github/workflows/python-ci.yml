@@ -1,0 +1,66 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: python-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compatibility:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: "3.11"
+          - os: ubuntu-latest
+            python: "3.12"
+          - os: ubuntu-latest
+            python: "3.13"
+          - os: ubuntu-latest
+            python: "3.14"
+          - os: windows-latest
+            python: "3.14"
+
+    steps:
+      - name: Check out the isolated public core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Prepare the packaging backend
+        run: python -m pip install "setuptools>=77" wheel
+
+      - name: Compile all public Python files
+        run: python -m compileall -q src examples smoke_test.py tests
+
+      - name: Install the public source package
+        run: python -m pip install --no-deps --no-build-isolation .
+
+      - name: Run the synthetic contract regressions
+        run: python -m unittest discover -s tests -v
+
+      - name: Run the synthetic round-trip example
+        run: python examples/synthetic_roundtrip.py
+
+      - name: Install the source package to a disposable target
+        run: python -m pip install --no-deps --no-build-isolation --target .ci-install .
+
+      - name: Verify the isolated installation
+        run: python smoke_test.py .ci-install
