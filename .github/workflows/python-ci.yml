@@ -64,3 +64,41 @@ jobs:
 
       - name: Verify the isolated installation
         run: python smoke_test.py .ci-install
+
+  distributions:
+    name: Build and inspect distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the isolated public core
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+
+      - name: Install the build backend and packaging inspection tools
+        run: python -m pip install --upgrade "setuptools>=77" wheel build twine
+
+      - name: Build wheel and source distribution
+        run: python -m build
+
+      - name: Validate distribution metadata and README rendering
+        run: python -m twine check dist/*
+
+      - name: Verify source archive includes Chinese docs and tests
+        run: |
+          python -c "import glob,tarfile; p=glob.glob('dist/*.tar.gz')[0]; names=tarfile.open(p).getnames(); required=('docs/README.zh-CN.md','docs/RELEASE_NOTES_0.1.0a1.md','tests/test_core_synthetic.py'); missing=[x for x in required if not any(n.endswith('/'+x) for n in names)]; assert not missing, missing"
+
+      - name: Install and smoke-test the wheel
+        run: |
+          python -m pip install --no-deps --target .dist-wheel dist/*.whl
+          python smoke_test.py .dist-wheel
+
+      - name: Install and smoke-test the source distribution
+        run: |
+          python -m pip install --no-deps --no-build-isolation --target .dist-sdist dist/*.tar.gz
+          python smoke_test.py .dist-sdist

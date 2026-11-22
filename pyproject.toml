@@ -1,17 +1,36 @@
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "btlx-editor-core"
 version = "0.1.0a1"
-description = "Neutral lossless protobuf wire and descriptor-injected structural editing core"
+description = "Lossless Protocol Buffers wire parser and descriptor-driven binary editing core"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "LGPL-3.0-or-later"
 license-files = ["COPYING", "COPYING.LESSER"]
 authors = [{name = "BTLX Core contributors"}]
-classifiers = ["Development Status :: 3 - Alpha", "Programming Language :: Python :: 3", "Topic :: Software Development :: Libraries :: Python Modules"]
+keywords = ["protobuf", "binary", "lossless", "descriptor", "wire-format", "editor"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Topic :: File Formats",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+[project.urls]
+Homepage = "https://github.com/hellow0rld-lyh/-btlx-editor-core"
+Repository = "https://github.com/hellow0rld-lyh/-btlx-editor-core"
+Documentation = "https://github.com/hellow0rld-lyh/-btlx-editor-core#readme"
+Issues = "https://github.com/hellow0rld-lyh/-btlx-editor-core/issues"
+Changelog = "https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/docs/RELEASE_NOTES_0.1.0a1.md"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

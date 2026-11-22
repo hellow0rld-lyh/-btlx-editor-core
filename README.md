@@ -1,80 +1,121 @@
 # BTLX Editor Core
 
 [![Python CI](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml/badge.svg)](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml)
-![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue)
-![License: LGPL-3.0-or-later](https://img.shields.io/badge/license-LGPL--3.0--or--later-green)
+![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/license-LGPL--3.0--or--later-2B7A3D)
+![Status](https://img.shields.io/badge/status-alpha-orange)
 
-**A lightweight, lossless Protocol Buffers wire parser and descriptor-driven binary editing core in Python.** The public package is a reusable library, not a complete game editor. It has no third-party runtime dependencies.
+**A small, lossless Protocol Buffers wire parser and descriptor-driven binary editing library for Python.**
 
-**中文简介：** BTLX Editor Core 是一个使用 Python 编写的轻量级无损 Protobuf 二进制解析与结构编辑库，支持未知字段保留、原始字节保真、外部描述符和事务式修改。它**不包含原版游戏文件、逆向获得的描述符或完整 GUI**。
+BTLX Editor Core focuses on one job: inspect structured binary data without needlessly rewriting bytes it does not understand. It is designed to be embedded in editors and tooling—not to be a complete game editor.
 
-> **Alpha 0.1.0a1.** Python 3.11, 3.12, 3.13 and 3.14 passed the initial Ubuntu CI matrix, and Python 3.14 passed on Windows ([verified run](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/runs/44885784941), 2026-11-21). No game or device compatibility is claimed.
+[简体中文文档](docs/README.zh-CN.md) · [Compatibility](docs/COMPATIBILITY.md) · [Source provenance](docs/SOURCE_PROVENANCE.md) · [Release notes](docs/RELEASE_NOTES_0.1.0a1.md)
 
-## What it does
+---
 
-- Parses and serializes protobuf wire records while preserving untouched bytes, unknown fields, duplicate occurrences, field ordering and noncanonical varints.
-- Uses **caller-supplied** descriptor reports; no game-specific schema/profile is bundled.
-- Supports atomic descriptor-qualified edits: \`assert\`, \`set\`, \`add\`, \`remove\`, \`clone\`, \`move\` and \`replace-message\`.
-- Supports optional source SHA-256 preconditions so a transaction can refuse stale input.
-- Has no runtime dependencies beyond Python's standard library.
+## Why this core?
 
-## Install and try it
+| Capability | What it means |
+|---|---|
+| **Lossless wire parsing** | Keeps original field bytes, ordering, duplicate occurrences, unknown fields and non-canonical varints. |
+| **Descriptor-driven access** | Uses descriptors supplied by the caller; field numbers are not treated as globally meaningful. |
+| **Surgical edits** | Re-encodes only the edited value and the length prefixes of affected parent messages. |
+| **Transactional edit plans** | Supports guarded, multi-operation edits and returns a receipt only after post-write checks pass. |
+| **Small runtime footprint** | Uses the Python standard library; no third-party runtime dependency. |
 
-Requires Python 3.11+ and a build environment with setuptools. PyPI distribution is **not yet available**; install from a cloned source checkout:
+## What is included
+
+- Strict parsing and byte-preserving serialization of Protocol Buffers wire records.
+- Caller-supplied schema/profile construction and descriptor-qualified field access.
+- Structural comparison and typed editing.
+- Edit operations: `assert`, `set`, `add`, `remove`, `clone`, `move` and `replace-message`.
+- Optional SHA-256 preconditions to reject edit plans targeting stale input.
+- Synthetic examples and regression tests that do not require game assets.
+
+## Quick start
+
+**Requirements:** Python 3.11 or newer.
+
+Clone the repository and install the library:
 
 ```bash
 git clone https://github.com/hellow0rld-lyh/-btlx-editor-core.git
-cd -- -btlx-editor-core
+cd ./-btlx-editor-core
+python -m pip install .
 ```
 
-Then:
+A minimal wire-level round trip:
 
-\`\`\`bash
-python -m pip install "setuptools>=77" wheel
-python -m pip install --no-build-isolation .
-python examples/synthetic_roundtrip.py
-python -m unittest discover -s tests -v
-\`\`\`
+```python
+from btlx_core import parse_message, serialize_preserving
 
-To smoke-test a second installation in an isolated target rather than relying only on the environment-wide install:
+original = bytes.fromhex("08 07 10 2A")
+message = parse_message(original)
 
-\`\`\`bash
-python -m pip install --no-build-isolation --no-deps --target .test-install .
-python smoke_test.py .test-install
-\`\`\`
+# Unknown or untouched fields are emitted using their original bytes.
+assert serialize_preserving(message) == original
+```
 
-The smoke test uses only synthetic bytes. To inspect the API:
+For descriptor-qualified editing, see [`examples/synthetic_roundtrip.py`](examples/synthetic_roundtrip.py). It creates a synthetic descriptor, parses synthetic bytes, applies an edit plan and verifies that unrelated bytes remain unchanged.
 
-\`\`\`python
-from btlx_core import (
-    ProfileSpec, profile_from_reports, parse_btlx,
-    apply_edit_plan, parse_message, encode_varint, CodecError,
-)
-\`\`\`
+## Build the distribution packages
 
-\`examples/synthetic_roundtrip.py\` demonstrates a caller-authored descriptor and a byte-preserving edit. The historical edit-plan schema identifier is \`EasyTechBTLXEditPlan/v1\`; it does **not** import or depend on the EasyTech research repository.
+The project is currently an **alpha source release**. A PyPI project release has not been published.
 
-## Documentation and verification
+Build both standard Python distribution formats from a clean checkout:
 
-- [Compatibility and Python test matrix](docs/COMPATIBILITY.md)
-- [Source provenance and redistribution scope](docs/SOURCE_PROVENANCE.md)
-- [Contribution guidelines](CONTRIBUTING.md)
-- [CI status](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml)
+```bash
+python -m pip install --upgrade build twine
+python -m build
+python -m twine check dist/*
+```
 
-CI runs synthetic contract regressions and isolated package tests for Python 3.11–3.14 on Ubuntu and 3.14 on Windows. These results do not establish compatibility with any particular proprietary game build.
+This creates:
 
-## Limitations
+- `dist/*.whl` — the installable wheel.
+- `dist/*.tar.gz` — the source distribution, including documentation and synthetic tests.
 
-No original game APK/SO/DEX, maps, payloads, recovered descriptor corpora, game-native patches or private evidence are included. There is no GUI, CLI or MCP server in this repository. Profile-specific reference rewriting, runtime gameplay validation and compatibility with a particular game build are **not** established. Supply your own descriptors/data that you are entitled to use.
+Install a downloaded wheel with `python -m pip install path/to/package.whl`. The source archive can be installed with `python -m pip install path/to/package.tar.gz`.
+
+The release candidate is version **0.1.0a1**. See [the release notes](docs/RELEASE_NOTES_0.1.0a1.md) for the contents and verification scope.
+
+## API surface
+
+The main public entry points are:
+
+- `parse_message` / `serialize_preserving` — raw wire parsing and byte-preserving serialization.
+- `ProfileSpec` / `profile_from_reports` — build a profile from caller-supplied descriptor reports.
+- `parse_btlx` / `semantic_diff` — descriptor-aware parsing and comparison.
+- `apply_edit_plan` — apply a validated multi-operation edit plan.
+
+The historical plan schema identifier is `EasyTechBTLXEditPlan/v1`. It is a schema name only; this package does not import or depend on the private EasyTech research repository.
+
+## Compatibility and verification
+
+The package declares Python **3.11+**. The GitHub Actions matrix has passed on:
+
+- Ubuntu: Python 3.11, 3.12, 3.13 and 3.14.
+- Windows: Python 3.14.
+
+CI runs synthetic regression tests, installation checks and examples. Distribution builds are also checked independently. These results validate the Python package—not compatibility with a particular game version, save file or device.
+
+See [the compatibility report](docs/COMPATIBILITY.md) and [GitHub Actions](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml).
+
+## Scope and safety
+
+This repository contains only the neutral Python core. It does **not** include:
+
+- original game APK/SO/DEX files, assets, maps or payloads;
+- recovered proprietary descriptor corpora or private research evidence;
+- game-specific native patches or automatic game-version profiles;
+- a graphical interface, standalone CLI or MCP server.
+
+A successful parse is not proof that a field's game-specific meaning is known. Supply only descriptors and data you are entitled to use, and keep game/version-specific assumptions outside this neutral core unless they are independently evidenced.
 
 ## License
 
-**GNU Lesser General Public License, version 3 or later (LGPL-3.0-or-later).**
+**LGPL-3.0-or-later.** The full license texts are included as `COPYING` and `COPYING.LESSER`. Preserve the notices and comply with the license when redistributing or modifying the library. See [`NOTICE.md`](NOTICE.md).
 
-- \`COPYING.LESSER\`: LGPLv3 supplemental terms.
-- \`COPYING\`: GPLv3 base terms incorporated by LGPLv3.
-- The Python library source files carry \`SPDX-License-Identifier: LGPL-3.0-or-later\`.
+---
 
-LGPL permits use from independently licensed or proprietary frontends subject to its requirements, including preserving notices and offering applicable replacement/relinking options. Original game names, content and trademarks are not covered by this project's license.
-
-See [NOTICE.md](NOTICE.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+**Project status:** Alpha. The public API and edit-plan format may change before a stable 1.0 release.
