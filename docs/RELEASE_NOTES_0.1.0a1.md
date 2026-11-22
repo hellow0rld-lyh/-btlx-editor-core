@@ -30,6 +30,7 @@ The Wheel contains the five public Python modules, package metadata and GNU lice
 - Windows Python 3.14: passed.
 - Local Python 3.14.6 wheel and source-archive build: passed.
 - Local installation and synthetic smoke/regression tests: passed.
+- GitHub Actions distribution job #45017914707: Wheel + sdist build, Twine metadata check, sdist content check and both isolated installs all passed.
 
 CI results are available from the [GitHub Actions workflow](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml).
 

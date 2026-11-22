@@ -23,11 +23,12 @@ Checks: standard-library compilation; isolated installation; ten synthetic
 contract regression tests; synthetic example; and smoke testing of a second
 target-directory installation.
 
-A separate `distributions` CI job is now configured to build both Wheel and
-source archive with `python -m build`, run `twine check`, confirm that the
-source archive contains the Chinese guide and synthetic tests, and install
-both artifacts into isolated targets. Its result is pending the next GitHub
-Actions run; the local 3.14.6 build and both isolated installs have passed.
+A separate `distributions` CI job has completed successfully in
+[GitHub Actions run #45017914707](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/runs/45017914707).
+It built the Wheel and source archive with `python -m build`, passed
+`twine check`, confirmed that the source archive contains the Chinese guide
+and synthetic tests, and installed/smoke-tested both artifacts in isolated
+targets. The local Python 3.14.6 build and both isolated installs also passed.
 
 These checks verify Python packaging and parsing/editing behavior, **not** any
 specific proprietary game data or device. No third-party assets or recovered

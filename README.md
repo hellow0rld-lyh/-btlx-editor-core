@@ -97,7 +97,7 @@ The package declares Python **3.11+**. The GitHub Actions matrix has passed on:
 - Ubuntu: Python 3.11, 3.12, 3.13 and 3.14.
 - Windows: Python 3.14.
 
-CI runs synthetic regression tests, installation checks and examples. Distribution builds are also checked independently. These results validate the Python package—not compatibility with a particular game version, save file or device.
+CI runs synthetic regression tests, installation checks and examples. A dedicated [distribution job](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/runs/45017914707) also built the Wheel and source archive, passed `twine check`, and installed both formats. These results validate the Python package—not compatibility with a particular game version, save file or device.
 
 See [the compatibility report](docs/COMPATIBILITY.md) and [GitHub Actions](https://github.com/hellow0rld-lyh/-btlx-editor-core/actions/workflows/python-ci.yml).
 
