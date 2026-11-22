@@ -9,7 +9,7 @@
 
 BTLX Editor Core focuses on one job: inspect structured binary data without needlessly rewriting bytes it does not understand. It is designed to be embedded in editors and tooling—not to be a complete game editor.
 
-[简体中文文档](docs/README.zh-CN.md) · [Compatibility](docs/COMPATIBILITY.md) · [Source provenance](docs/SOURCE_PROVENANCE.md) · [Release notes](docs/RELEASE_NOTES_0.1.0a1.md)
+[简体中文文档](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/docs/README.zh-CN.md) · [Compatibility](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/docs/COMPATIBILITY.md) · [Source provenance](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/docs/SOURCE_PROVENANCE.md) · [Release notes](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/docs/RELEASE_NOTES_0.1.0a1.md)
 
 ---
 
@@ -56,7 +56,7 @@ message = parse_message(original)
 assert serialize_preserving(message) == original
 ```
 
-For descriptor-qualified editing, see [`examples/synthetic_roundtrip.py`](examples/synthetic_roundtrip.py). It creates a synthetic descriptor, parses synthetic bytes, applies an edit plan and verifies that unrelated bytes remain unchanged.
+For descriptor-qualified editing, see [`examples/synthetic_roundtrip.py`](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/examples/synthetic_roundtrip.py). It creates a synthetic descriptor, parses synthetic bytes, applies an edit plan and verifies that unrelated bytes remain unchanged.
 
 ## Build the distribution packages
 
@@ -114,7 +114,7 @@ A successful parse is not proof that a field's game-specific meaning is known. S
 
 ## License
 
-**LGPL-3.0-or-later.** The full license texts are included as `COPYING` and `COPYING.LESSER`. Preserve the notices and comply with the license when redistributing or modifying the library. See [`NOTICE.md`](NOTICE.md).
+**LGPL-3.0-or-later.** The full license texts are included as `COPYING` and `COPYING.LESSER`. Preserve the notices and comply with the license when redistributing or modifying the library. See [`NOTICE.md`](https://github.com/hellow0rld-lyh/-btlx-editor-core/blob/main/NOTICE.md).
 
 ---
 
